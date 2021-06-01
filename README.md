@@ -2,7 +2,7 @@
 
 This is a block chain experiment written in Golang.
 
-Build:
+Build and run:
 
 ```
 make
