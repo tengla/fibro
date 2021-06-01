@@ -46,9 +46,8 @@ func NewBlock(data map[string]string) *Block {
 // GenerateHash
 func (b *Block) GenerateHash() string {
 	sha := sha256.New()
-	jayson, _ := json.Marshal(b.Data)
 	str := fmt.Sprintf("%d%d%s%s%s",
-		b.Nonce, b.Idx, b.PreviousHash, b.Created, jayson)
+		b.Nonce, b.Idx, b.PreviousHash, b.Created, b.DataToJSON())
 	_, err := sha.Write([]byte(str))
 	if err != nil {
 		log.Fatal(err)
@@ -64,6 +63,14 @@ func (b *Block) Verify() bool {
 		return true
 	}
 	return b.Hash == b.Next.PreviousHash
+}
+
+func (b *Block) DataToJSON() string {
+	bytes, err := json.Marshal(b.Data)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(bytes)
 }
 
 func (b *Block) ToJSON() string {

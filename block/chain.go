@@ -8,22 +8,21 @@ import (
 type Chain struct {
 	Created        time.Time
 	Genesis        *Block
-	NumberOfBlocks int
 	Difficulty     int
+	numberOfBlocks int
 }
 
 // IncrNumberOfBlocks
 func (c *Chain) IncrNumberOfBlocks() int {
-	c.NumberOfBlocks = c.NumberOfBlocks + 1
-	return c.NumberOfBlocks
+	c.numberOfBlocks = c.numberOfBlocks + 1
+	return c.numberOfBlocks
 }
 
 // CreateChain
 func CreateChain(difficulty int) *Chain {
 	chain := &Chain{
-		Created:        time.Now(),
-		NumberOfBlocks: 0,
-		Difficulty:     difficulty,
+		Created:    time.Now(),
+		Difficulty: difficulty,
 	}
 	b := NewBlock(map[string]string{
 		"Name": "Genesis Block",
@@ -49,14 +48,14 @@ func (c *Chain) AddBlock(b *Block) {
 }
 
 // Validate
-func (c *Chain) Validate() bool {
-	v := true
+func (c *Chain) Validate() *Block {
+	var foundInvalid *Block = nil
 	c.EveryBlock(func(b *Block) {
-		if v {
-			v = b.Verify()
+		if !b.Verify() {
+			foundInvalid = b
 		}
 	})
-	return v
+	return foundInvalid
 }
 
 // EveryBlock
